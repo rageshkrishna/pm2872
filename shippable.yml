@@ -10,11 +10,6 @@ branches:
 
 cache: true
 
-notifications:
-    email:
-        - pcullin@weareratio.com
-        - bbronske@weareratio.com
-
 # set the source location of rvm 
 # force use rvm v1.9.2
 # update npm to v2+
