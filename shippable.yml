@@ -1,0 +1,65 @@
+language: node_js
+
+env:
+  global:
+    - WEBHOSE_URI=https://webhose.io/search
+    
+branches:
+  only:
+    - develop
+
+cache: true
+
+notifications:
+    email:
+        - pcullin@weareratio.com
+        - bbronske@weareratio.com
+
+# set the source location of rvm 
+# force use rvm v1.9.2
+# update npm to v2+
+# validate the npm version
+
+# install the new iron worker cli
+
+# validate the iron cli install
+
+before_install:
+# - source ~/.rvm/scripts/rvm
+# - rvm use 1.9.2 || rvm install 1.9.2
+  - npm install -g npm@latest
+  - npm -v
+  - curl -sSL http://get.iron.io/cli | sh
+  - iron --version
+
+# install the old cli via iron_worker_ng ruby gem
+# install project root npm modules
+# test deploy one of the workers using the new cli and packaging method
+install:
+#  - gem install iron_worker_ng
+  - npm install
+  - npm run deploy:workers:rss:lb -- test
+
+# provision testresults and codecoverage folders
+before_script:
+  - mkdir -p shippable/testresults
+  - mkdir -p shippable/codecoverage
+
+# run tests
+script:
+#  - npm run test:ci
+
+after_success:
+  - npm run deploy:workers:rss:lb -- stage
+# TODO: deploy all workers to staging environment after successful build
+# TODO: remove NODE_ENV from .worker files and pass into workers via payload?
+#    - iron_worker upload atomization_loadbalancer --env test
+#    - iron_worker upload atomization --env test
+#    - iron_worker upload content_retriever --env test
+#    - iron_worker upload rss_parser_loadbalancer --env test
+#    - iron_worker upload rss_parser --env test
+
+after_failure:
+
+after_script:
+#  - ./node_modules/.bin/istanbul report cobertura --dir  shippable/codecoverage/
